@@ -260,7 +260,7 @@ input:focus, textarea:focus, button:focus { outline: none; }
 .signup-topbar h1 { font-size: 20px; font-weight: 700; margin: 0; }
 
 /* ─── Home screen ────────────────────────────────────────────────────── */
-.home-header { background: linear-gradient(135deg, #064e3b, #059669); padding: 8px 20px 28px; position: relative; overflow: hidden; }
+.home-header { background: linear-gradient(135deg, #064e3b, #059669); padding: 8px 20px 28px; position: relative; overflow: hidden; flex-shrink: 0; }
 .home-header-blob { position: absolute; top: 0; right: 0; width: 176px; height: 176px; border-radius: 999px; background: rgba(255,255,255,0.05); transform: translate(88px, -88px); }
 .home-header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
 .home-date { color: #a7f3d0; font-size: 12px; font-weight: 500; margin: 0; }
