@@ -1,0 +1,4 @@
+/* Colors and light/dark theme tokens. Change the look of the whole site here. */
+:root{--paper:#FAFBFE;--ink:#16205B;--cloth:#1B2559;--mfg:#586391;--rule:rgba(60,105,200,.15);--rule2:rgba(60,105,200,.3);--margin:#C8372D;--hi:rgba(255,205,40,.4);--field:rgba(22,32,91,.05);--ok:#1B7F47;box-sizing:border-box}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--paper:#141A38;--ink:#E8ECFF;--cloth:#0A0E24;--mfg:#9AA6D8;--rule:rgba(140,170,255,.11);--rule2:rgba(140,170,255,.26);--margin:#FF7E78;--hi:rgba(255,200,60,.2);--field:rgba(232,236,255,.07);--ok:#4ADE80}}
+:root[data-theme=dark]{--paper:#141A38;--ink:#E8ECFF;--cloth:#0A0E24;--mfg:#9AA6D8;--rule:rgba(140,170,255,.11);--rule2:rgba(140,170,255,.26);--margin:#FF7E78;--hi:rgba(255,200,60,.2);--field:rgba(232,236,255,.07);--ok:#4ADE80}

@@ -1,16 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Roz ka Khata App Design</title>
-    <meta name="description" content="Effortlessly track daily expenses and manage budgets with this elegant personal finance app, designed for users seeking smart financial insights." />
-    <meta name="robots" content="noindex, nofollow" />
-    <link rel="stylesheet" href="/src/style.css" />
-    <style>html, body { height: 100%; margin: 0; } #root { height: 100%; }</style>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Roz ka Khata – Daily expense tracker</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700&family=Tiro+Devanagari+Hindi&display=swap">
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+<aside class="cover">
+  <h1>रोज़ का खाता<small>Roz ka Khata, your daily ledger</small></h1>
+  <div class="mnav"><button class="ib" data-act="prev" aria-label="Previous month">‹</button><b id="mlabel" aria-live="polite"></b><button class="ib" data-act="next" aria-label="Next month">›</button></div>
+  <div id="summary" aria-label="Month summary"></div>
+  <nav class="nav" aria-label="Sections"><button data-act="go" data-v="home">Home<small>मुखपृष्ठ</small></button><button data-act="go" data-v="add">Add<small>जोड़ें</small></button><button data-act="go" data-v="history">History<small>इतिहास</small></button><button data-act="go" data-v="categories">Categories<small>श्रेणी</small></button><button data-act="go" data-v="compare">Compare<small>तुलना</small></button></nav>
+  <div class="tools"><button class="ib th" data-act="theme" aria-label="Switch light or dark theme" title="Theme">◐</button><select id="lang" aria-label="Language"><option value="en">English</option><option value="hi">हिन्दी</option><option value="mr">मराठी</option></select></div>
+</aside>
+<main>
+<section class="view" id="v-home">
+  <div class="ph"><h2>Today's page</h2><p class="mut">The latest entries in your ledger.</p></div>
+  <section class="blk"><div class="filt"><h2>Recent expenses</h2><button data-act="go" data-v="history">See all</button></div><div id="recent"></div></section>
+  <section class="blk"><div class="filt"><h2>Where it went</h2><button data-act="go" data-v="categories">Details</button></div><div id="top"></div></section>
+</section>
+<section class="view" id="v-add">
+  <div class="ph"><h2>Write a new entry</h2><p class="mut">Log it as it happens. It takes a few seconds.</p></div>
+  <form class="blk" id="f" novalidate>
+      <h2 id="ftitle">Add an expense</h2>
+      <div class="amt"><label for="amt" style="margin-top:0">Amount</label><span>₹</span><input class="inp" id="amt" inputmode="decimal" autocomplete="off" placeholder="0"></div>
+      <label>Category</label>
+      <div class="chips" id="cats"></div>
+      <div class="row2">
+        <div><label for="date">Date</label><input class="inp" type="date" id="date"></div>
+        <div><label for="note">Note (optional)</label><input class="inp" id="note" maxlength="60" placeholder="e.g. Chai at tapri"></div>
+      </div>
+      <div class="err" id="err" role="alert"></div>
+      <div class="btns"><button class="btn" id="save">Add expense</button><button type="button" class="btn g" id="cancel" data-act="cancel" hidden>Cancel</button></div>
+    </form>
+</section>
+<section class="view" id="v-history">
+  <div class="ph"><h2>History</h2><p class="mut">Every expense this month, with a total for each day.</p></div>
+  <section class="blk"><div id="list"></div></section>
+</section>
+<section class="view" id="v-categories">
+  <div class="ph"><h2>Categories</h2><p class="mut">Select one to see only its expenses.</p></div>
+  <section class="blk"><div id="bycat"></div></section>
+</section>
+<section class="view" id="v-compare" style="max-width:900px">
+  <div class="ph"><h2>Compare months</h2><p class="mut">Your last six months. Select a bar to open that month.</p></div>
+  <section class="blk"><div class="months" id="months"></div><p class="mut" id="cmp" style="margin:12px 0 0"></p><div style="overflow-x:auto"><table class="tbl" id="mtable"></table></div></section>
+</section>
+</main>
+</div>
+<div class="snack" id="snack" role="status" hidden><span>Expense deleted.</span><button data-act="undo">Undo</button></div>
+
+<script src="js/data.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/state.js"></script>
+<script src="js/render.js"></script>
+<script src="js/app.js"></script>
+</body>
 </html>
