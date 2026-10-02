@@ -18,6 +18,9 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-act]');i
   else if(a==='month')month=v;
   else if(a==='filter'){filter=filter===v?null:v;view='history'}
   else if(a==='go'){view=v;scrollTo(0,0)}
+  else if(a==='logout'){Auth.logout();clearTimeout(undoTimer);$('#snack').hidden=true;showAuth();return}
+  else if(a==='scope')expScope=v;
+  else if(a==='export'){doExport(v);return}
   else if(a==='sample')sample();
   else if(a==='theme'){const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;r.dataset.theme=dark?'light':'dark'}
   else if(a==='cancel'){resetForm();view='history'}
@@ -26,5 +29,31 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-act]');i
   else if(a==='undo'){if(undo){exps.push(undo);undo=null;save()}$('#snack').hidden=true}
   if(a!=='theme')render();
 });
+document.addEventListener('keydown',ev=>{if((ev.key==='Enter'||ev.key===' ')&&ev.target.closest&&ev.target.closest('.sl')){ev.preventDefault();ev.target.closest('.sl').dispatchEvent(new MouseEvent('click',{bubbles:true}))}});
 $('#lang').addEventListener('change',e=>{lang=e.target.value;try{localStorage.setItem('rozkakhata:lang',lang)}catch(_){}applyStatic();render()});
-applyStatic();resetForm();render();
+
+/* Sign in / register screen */
+let mode='login';
+function applyAuth(){const r=mode==='register';
+  $('#atitle').textContent=t(r?'r_title':'l_title');$('#asub').textContent=t(r?'r_sub':'l_sub');
+  $('#aname-w').hidden=!r;$('#apw2-w').hidden=!r;
+  $('label[for=aname]').textContent=t('a_name');$('label[for=aemail]').textContent=t('a_email');$('label[for=apw]').textContent=t('a_pw');$('label[for=apw2]').textContent=t('a_pw2');
+  $('#asubmit').textContent=t(r?'b_reg':'b_login');$('#aswitch').textContent=t(r?'a_to_login':'a_to_reg');
+  $('#apw').autocomplete=r?'new-password':'current-password';$('#logout').textContent=t('b_logout');$('#lang2').value=lang}
+function setMode(m){mode=m;$('#af').reset();$('#aerr').textContent='';applyAuth()}
+$('#af').addEventListener('submit',async ev=>{ev.preventDefault();
+  const r=mode==='register',name=$('#aname').value.trim(),email=$('#aemail').value.trim(),password=$('#apw').value,err=k=>{$('#aerr').textContent=t(k)};
+  if(r&&!name)return err('e_name');
+  if(!/^\S+@\S+\.\S+$/.test(email))return err('e_email');
+  if(r&&password.length<6)return err('e_pwlen');
+  if(r&&password!==$('#apw2').value)return err('e_pwmatch');
+  if(!password)return err('e_bad');
+  try{showApp(await Auth[r?'register':'login']({name,email,password}))}
+  catch(e){err(e.code==='exists'?'e_exists':e.code==='bad'?'e_bad':'e_store')}
+});
+$('#aswitch').addEventListener('click',()=>{setMode(mode==='login'?'register':'login');$('#aemail').focus()});
+$('#lang2').addEventListener('change',e=>{lang=e.target.value;try{localStorage.setItem('rozkakhata:lang',lang)}catch(_){}applyStatic()});
+
+function showApp(u){document.body.classList.remove('authing');exps=loadExps();month=today.slice(0,7);filter=null;view='home';$('#uname').textContent=u.name;$('#af').reset();applyStatic();resetForm();render();scrollTo(0,0)}
+function showAuth(){exps=[];document.body.classList.add('authing');setMode('login');applyStatic()}
+const u0=Auth.current();u0?showApp(u0):showAuth();

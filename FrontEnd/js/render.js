@@ -1,5 +1,11 @@
 /* Drawing the screens: totals, charts, category bars, month comparison and the expense list. */
 let shown=0;function tick(el,to){const from=shown,t0=performance.now();shown=to;if(from===to||matchMedia('(prefers-reduced-motion:reduce)').matches){el.textContent=fmt(to);return}(function f(n){const k=Math.min(1,(n-t0)/420);el.textContent=fmt(from+(to-from)*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(f)})(t0)}
+/* Donut (pie) chart: each slice is clickable and filters History by that category. */
+function arc(r0,r1,a0,a1){const p=(r,a)=>[(100+r*Math.sin(a)).toFixed(2),(100-r*Math.cos(a)).toFixed(2)],l=a1-a0>Math.PI?1:0,[x0,y0]=p(r1,a0),[x1,y1]=p(r1,a1),[x2,y2]=p(r0,a1),[x3,y3]=p(r0,a0);return`M${x0} ${y0}A${r1} ${r1} 0 ${l} 1 ${x1} ${y1}L${x2} ${y2}A${r0} ${r0} 0 ${l} 0 ${x3} ${y3}Z`}
+function donut(by,total){let a=0;const tf=fmt(total),fs=tf.length>8?15:tf.length>6?18:21;
+  const sl=by.map(([c,v])=>{const span=v/total*2*Math.PI,a0=a,a1=a+Math.min(span,6.28),mid=(a0+a1)/2,pc=Math.round(v/total*100);a+=span;
+    return`<g class="sl${filter&&filter!==c?' dim':''}" data-act="filter" data-v="${c}" role="button" tabindex="0" aria-label="${tc(c)}: ${fmt(v)}, ${pc}%"><path d="${arc(52,92,a0,a1)}" fill="${CATS[c][0]}"/><title>${tc(c)}: ${fmt(v)} (${pc}%)</title>${pc>=7?`<text class="pl" x="${(100+72*Math.sin(mid)).toFixed(1)}" y="${(104-72*Math.cos(mid)).toFixed(1)}" text-anchor="middle">${pc}%</text>`:''}</g>`}).join('');
+  return`<svg class="donut" viewBox="0 0 200 200" role="group" aria-label="${t('pie_aria')}">${sl}<text class="dc" x="100" y="102" text-anchor="middle" style="font-size:${fs}px">${tf}</text><text class="dl" x="100" y="120" text-anchor="middle">${t('x_total')}</text></svg>`}
 function render(){
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+view));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===view));
   const inM=exps.filter(e=>e.date.startsWith(month)),total=sum(inM),pk=addM(month,-1),prev=sum(exps.filter(e=>e.date.startsWith(pk)));
@@ -12,14 +18,14 @@ function render(){
   tick($('#summary .big span'),total);
 
   const by=Object.keys(CATS).map(c=>[c,sum(inM.filter(e=>e.category===c))]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
-  const strip=by.length?`<div class="strip" role="img" aria-label="Category split">${by.map(([c,v])=>`<i style="flex:${v};background:${CATS[c][0]}" title="${tc(c)}"></i>`).join('')}</div>`:'';
   const bar=([c,v])=>`<button class="cat ${filter===c?'on':''}" data-act="filter" data-v="${c}" aria-pressed="${filter===c}"><i class="dot" style="background:${CATS[c][0]};width:14px;height:14px"></i><span>${tc(c)}</span><em>${fmt(v)}</em><small>${Math.round(v/total*100)}%</small></button>`;
   const none='<p class="mut">'+t('nodata')+'</p>';
-  $('#bycat').innerHTML=by.length?strip+by.map(bar).join(''):none;
-  $('#top').innerHTML=by.length?strip+`<p style="margin:0">${by.slice(0,3).map(([c,v])=>`<b>${tc(c)}</b> ${fmt(v)}`).join(', ')}</p>`:none;
+  $('#bycat').innerHTML=by.length?`<div class="split">${donut(by,total)}<div>${by.map(bar).join('')}</div></div>`:none;
+  $('#top').innerHTML=by.length?`<div class="split sm">${donut(by,total)}<div>${by.slice(0,4).map(([c,v])=>`<div class="lgi"><i class="dot" style="background:${CATS[c][0]}"></i><span>${tc(c)}</span><b>${fmt(v)}</b></div>`).join('')}</div></div>`:none;
 
   const ks=[-5,-4,-3,-2,-1,0].map(n=>addM(month,n)),tt=ks.map(k=>sum(exps.filter(e=>e.date.startsWith(k)))),mx=Math.max(...tt,1);
-  $('#months').innerHTML=ks.map((k,i)=>`<button class="mb ${k===month?'on':''}" data-act="month" data-v="${k}" aria-label="${long(k)}: ${fmt(tt[i])}"><span>${tt[i]?fmt(tt[i]):''}</span><i style="height:${tt[i]/mx*120}px"></i>${short(k)}</button>`).join('');
+  $('#months').innerHTML=ks.map((k,i)=>{const pv=i?tt[i-1]:sum(exps.filter(e=>e.date.startsWith(addM(k,-1)))),cl=tt[i]&&pv?(tt[i]>pv?'mu':'md'):'';return`<button class="mb ${cl} ${k===month?'on':''}" data-act="month" data-v="${k}" aria-label="${long(k)}: ${fmt(tt[i])}"><span>${tt[i]?fmt(tt[i]):''}</span><i style="height:${tt[i]/mx*120}px"></i>${short(k)}</button>`}).join('');
+  $('#cleg').innerHTML=`<i class="sw" style="background:var(--margin)"></i>${t('leg_more')}<i class="sw" style="background:var(--ok)"></i>${t('leg_less')}`;
   const best=tt.filter(x=>x).length>1?ks[tt.indexOf(Math.max(...tt))]:null;
   $('#cmp').textContent=best?t('high').replace('{m}',long(best)).replace('{a}',fmt(Math.max(...tt))):t('pick');
 
@@ -31,4 +37,8 @@ function render(){
   const rows=all.filter(e=>!filter||e.category===filter);
   $('#recent').innerHTML=all.length?group(all.slice(0,5)):empty;
   $('#list').innerHTML=(filter?`<div class="filt"><span class="mut">${t('showing').replace('{c}',tc(filter))}</span><button data-act="filter" data-v="${filter}">${t('clear')}</button></div>`:'')+(rows.length?group(rows):filter?`<div class="empty mut">${t('nocat').replace('{c}',tc(filter)).replace('{m}',long(month))}</div>`:empty);
+  $('#exp').innerHTML=`<h2>${t('exp_h')}</h2><p class="mut" style="margin:6px 0 0">${t('exp_p')}</p>
+  <div class="xrow"><div class="seg" role="group">${['month','all'].map(k=>`<button class="${expScope===k?'on':''}" data-act="scope" data-v="${k}" aria-pressed="${expScope===k}">${t('sc_'+k)}</button>`).join('')}</div>
+  <button class="btn sm" data-act="export" data-v="csv">CSV</button><button class="btn sm" data-act="export" data-v="xlsx">Excel</button><button class="btn sm" data-act="export" data-v="pdf">PDF</button></div>
+  <p class="mut" style="margin:8px 0 0;font-size:13px">${t('x_pdfhint')}</p><div class="err" id="xerr" role="alert"></div>`;
 }

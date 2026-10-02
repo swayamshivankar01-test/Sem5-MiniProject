@@ -57,6 +57,45 @@ th_s|Spent|खर्च|खर्च
 th_v|vs previous|पिछले से|मागील तुलनेत
 high|Highest spending in this range: {m} ({a}). Select a bar to open that month.|इस अवधि में सबसे ज़्यादा खर्च: {m} ({a})। उस महीने को खोलने के लिए बार चुनें।|या कालावधीत सर्वाधिक खर्च: {m} ({a}). तो महिना उघडण्यासाठी पट्टी निवडा.
 pick|Select a bar to open that month.|उस महीने को खोलने के लिए बार चुनें।|तो महिना उघडण्यासाठी पट्टी निवडा.
+l_title|Welcome back|वापसी पर स्वागत है|पुन्हा स्वागत आहे
+l_sub|Sign in to open your ledger.|अपना खाता खोलने के लिए साइन इन करें।|तुमचे खाते उघडण्यासाठी साइन इन करा.
+r_title|Create your ledger|अपना खाता बनाएँ|तुमचे खाते तयार करा
+r_sub|One account keeps your expenses private.|एक अकाउंट आपके खर्च निजी रखता है।|एक अकाउंट तुमचे खर्च खाजगी ठेवते.
+a_name|Name|नाम|नाव
+a_email|Email|ईमेल|ईमेल
+a_pw|Password|पासवर्ड|पासवर्ड
+a_pw2|Confirm password|पासवर्ड दोबारा लिखें|पासवर्ड पुन्हा लिहा
+b_login|Sign in|साइन इन|साइन इन
+b_reg|Create account|अकाउंट बनाएँ|अकाउंट तयार करा
+b_logout|Sign out|साइन आउट|साइन आउट
+a_to_reg|New here? Create an account|नए हैं? अकाउंट बनाएँ|नवीन आहात? अकाउंट तयार करा
+a_to_login|Already have an account? Sign in|अकाउंट है? साइन इन करें|अकाउंट आहे? साइन इन करा
+e_name|Enter your name.|अपना नाम लिखें।|तुमचे नाव लिहा.
+e_email|Enter a valid email address.|सही ईमेल पता लिखें।|योग्य ईमेल पत्ता लिहा.
+e_pwlen|Password must be at least 6 characters.|पासवर्ड कम से कम 6 अक्षरों का होना चाहिए।|पासवर्ड किमान 6 अक्षरांचा असावा.
+e_pwmatch|The two passwords do not match.|दोनों पासवर्ड मेल नहीं खाते।|दोन्ही पासवर्ड जुळत नाहीत.
+e_exists|An account with this email already exists. Sign in instead.|इस ईमेल से अकाउंट पहले से है। साइन इन करें।|या ईमेलचे अकाउंट आधीपासून आहे. साइन इन करा.
+e_bad|Email or password is incorrect.|ईमेल या पासवर्ड ग़लत है।|ईमेल किंवा पासवर्ड चुकीचा आहे.
+e_store|This browser is blocking saving, so the account could not be created.|यह ब्राउज़र सहेजने से रोक रहा है, इसलिए अकाउंट नहीं बन सका।|हा ब्राउझर साठवणे रोखत आहे, त्यामुळे अकाउंट तयार झाले नाही.
+exp_h|Export|निर्यात|निर्यात
+exp_p|Download your entries as a file, or print a report.|अपनी प्रविष्टियाँ फ़ाइल में डाउनलोड करें या रिपोर्ट प्रिंट करें।|तुमच्या नोंदी फाइलमध्ये डाउनलोड करा किंवा अहवाल प्रिंट करा.
+sc_month|This month|इस महीने|या महिन्याचे
+sc_all|All entries|सभी प्रविष्टियाँ|सर्व नोंदी
+x_pdfhint|For PDF, choose "Save as PDF" in the print window.|PDF के लिए प्रिंट विंडो में "Save as PDF" चुनें।|PDF साठी प्रिंट विंडोमध्ये "Save as PDF" निवडा.
+x_none|There is nothing to export for this period.|इस अवधि के लिए निर्यात करने को कुछ नहीं है।|या कालावधीसाठी निर्यात करण्यासारखे काही नाही.
+x_date|Date|तारीख|तारीख
+x_cat|Category|श्रेणी|श्रेणी
+x_note|Note|टिप्पणी|टीप
+x_amt|Amount (₹)|राशि (₹)|रक्कम (₹)
+x_total|Total|कुल|एकूण
+x_rep|Expense report|खर्च रिपोर्ट|खर्च अहवाल
+x_by|By category|श्रेणी के अनुसार|श्रेणीनुसार
+x_period|Period|अवधि|कालावधी
+x_acct|Account|अकाउंट|अकाउंट
+x_gen|Generated on|बनाया गया|तयार केले
+pie_aria|Spending by category|श्रेणी के अनुसार खर्च|श्रेणीनुसार खर्च
+leg_more|Spent more than the month before|पिछले महीने से ज़्यादा खर्च|मागील महिन्यापेक्षा जास्त खर्च
+leg_less|Spent less|कम खर्च|कमी खर्च
 c_Food|Food|खाना|जेवण
 c_Transport|Transport|यात्रा|प्रवास
 c_Bills|Bills|बिल|बिले
@@ -72,4 +111,4 @@ function applyStatic(){document.documentElement.lang=lang;$('#lang').value=lang;
   document.querySelectorAll('#cats label').forEach(l=>l.textContent=tc(l.previousElementSibling.value));
   const fv=$('#f').cat?$('#f').cat.value:'Food';
   $('#f').cat.value=fv;
-  $('#note').placeholder=t('ph');$('#ftitle').textContent=t(editId?'t_edit':'t_add');$('#save').textContent=t(editId?'b_edit':'b_add')}
+  $('#note').placeholder=t('ph');$('#ftitle').textContent=t(editId?'t_edit':'t_add');$('#save').textContent=t(editId?'b_edit':'b_add');applyAuth()}

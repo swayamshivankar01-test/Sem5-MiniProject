@@ -8,7 +8,23 @@
 <link rel="stylesheet" href="css/theme.css">
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="authing">
+<section id="auth" aria-label="Sign in">
+  <div class="acard">
+    <h1>रोज़ का खाता<small>Roz ka Khata, your daily ledger</small></h1>
+    <form id="af" novalidate>
+      <h2 id="atitle"></h2><p class="mut" id="asub"></p>
+      <div id="aname-w"><label for="aname">Name</label><input class="inp" id="aname" autocomplete="name"></div>
+      <label for="aemail">Email</label><input class="inp" type="email" id="aemail" autocomplete="email" inputmode="email">
+      <label for="apw">Password</label><input class="inp" type="password" id="apw" autocomplete="current-password">
+      <div id="apw2-w"><label for="apw2">Confirm password</label><input class="inp" type="password" id="apw2" autocomplete="new-password"></div>
+      <div class="err" id="aerr" role="alert"></div>
+      <div class="btns"><button class="btn" id="asubmit">Sign in</button></div>
+      <button type="button" class="alink" id="aswitch"></button>
+    </form>
+    <div class="tools"><select id="lang2" aria-label="Language"><option value="en">English</option><option value="hi">हिन्दी</option><option value="mr">मराठी</option></select></div>
+  </div>
+</section>
 <div class="app">
 <aside class="cover">
   <h1>रोज़ का खाता<small>Roz ka Khata, your daily ledger</small></h1>
@@ -16,6 +32,7 @@
   <div id="summary" aria-label="Month summary"></div>
   <nav class="nav" aria-label="Sections"><button data-act="go" data-v="home">Home<small>मुखपृष्ठ</small></button><button data-act="go" data-v="add">Add<small>जोड़ें</small></button><button data-act="go" data-v="history">History<small>इतिहास</small></button><button data-act="go" data-v="categories">Categories<small>श्रेणी</small></button><button data-act="go" data-v="compare">Compare<small>तुलना</small></button></nav>
   <div class="tools"><button class="ib th" data-act="theme" aria-label="Switch light or dark theme" title="Theme">◐</button><select id="lang" aria-label="Language"><option value="en">English</option><option value="hi">हिन्दी</option><option value="mr">मराठी</option></select></div>
+  <div class="acct"><span id="uname"></span><button data-act="logout" id="logout">Sign out</button></div>
 </aside>
 <main>
 <section class="view" id="v-home">
@@ -40,6 +57,7 @@
 </section>
 <section class="view" id="v-history">
   <div class="ph"><h2>History</h2><p class="mut">Every expense this month, with a total for each day.</p></div>
+  <section class="blk" id="exp"></section>
   <section class="blk"><div id="list"></div></section>
 </section>
 <section class="view" id="v-categories">
@@ -48,16 +66,19 @@
 </section>
 <section class="view" id="v-compare" style="max-width:900px">
   <div class="ph"><h2>Compare months</h2><p class="mut">Your last six months. Select a bar to open that month.</p></div>
-  <section class="blk"><div class="months" id="months"></div><p class="mut" id="cmp" style="margin:12px 0 0"></p><div style="overflow-x:auto"><table class="tbl" id="mtable"></table></div></section>
+  <section class="blk"><div class="months" id="months"></div><p class="mut" id="cmp" style="margin:12px 0 0"></p><p class="mut leg" id="cleg"></p><div style="overflow-x:auto"><table class="tbl" id="mtable"></table></div></section>
 </section>
 </main>
 </div>
 <div class="snack" id="snack" role="status" hidden><span>Expense deleted.</span><button data-act="undo">Undo</button></div>
 
+<div id="printArea"></div>
 <script src="js/data.js"></script>
 <script src="js/i18n.js"></script>
+<script src="js/auth.js"></script>
 <script src="js/state.js"></script>
 <script src="js/render.js"></script>
+<script src="js/export.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

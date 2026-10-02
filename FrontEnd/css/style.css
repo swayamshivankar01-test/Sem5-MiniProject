@@ -75,3 +75,39 @@ label{display:block;font-size:14px;font-weight:700;margin:14px 0 2px}
 @media(max-width:899px){.cover h1{font-size:30px}.big{font-size:46px}.nav{position:fixed;left:0;right:0;bottom:0;z-index:5;flex-direction:row;background:var(--cloth);border-top:1px solid rgba(243,241,234,.3);padding:0 4px env(safe-area-inset-bottom,0px);margin:0}.nav button{flex:1;text-align:center;font-size:13px;padding:10px 2px 8px;border-left:0;border-top:3px solid transparent}.nav button.on{border-top-color:#FF9A94}.nav small{display:block;margin:0;font-size:11px}.tools{position:absolute;top:16px;right:20px;z-index:2}}
 @media(max-width:600px){#f{display:block}.cat{grid-template-columns:16px 1fr auto 40px;gap:8px}.ph h2{font-size:28px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* Sign in / register */
+#auth{display:none;min-height:100vh;place-items:center;padding:24px;background:var(--cloth) repeating-linear-gradient(45deg,rgba(255,255,255,.035) 0 1px,transparent 1px 4px)}
+body.authing #auth{display:grid}body.authing .app,body.authing .snack{display:none}
+.acard{position:relative;width:min(100%,420px);background:var(--paper) repeating-linear-gradient(transparent 0 31px,var(--rule) 31px 32px);padding:28px 26px 22px 48px;box-shadow:0 0 0 1px var(--ink)}
+.acard::before{content:"";position:absolute;top:0;bottom:0;left:30px;width:4px;border-left:1px solid var(--margin);border-right:1px solid var(--margin);opacity:.7}
+.acard h1{font-size:34px;line-height:1.15}.acard h1 small{display:block;margin:2px 0 0;font:500 13px Mukta,sans-serif;color:var(--mfg);opacity:1}
+.acard h2{font-size:22px;margin-top:22px}.acard form p{margin:2px 0 0}
+.alink{border:0;background:none;text-decoration:underline;text-underline-offset:3px;font-weight:600;padding:12px 0 0;color:inherit}.alink:hover{color:var(--margin)}
+#lang2{background:transparent;color:inherit;border:1px solid var(--rule2);border-radius:2px;padding:4px 8px;font-size:14px;margin-top:14px}#lang2 option{color:#16205B;background:#fff}
+.acct{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:14px;border-top:1px dotted rgba(243,241,234,.35);padding-top:8px}
+.acct span{opacity:.8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.acct button{border:0;background:none;color:inherit;text-decoration:underline;text-underline-offset:3px;font-weight:600;opacity:.85;padding:2px 0}.acct button:hover{opacity:1}
+
+/* Pie chart, month bars colour, export */
+.split{display:grid;grid-template-columns:230px 1fr;gap:26px;align-items:center;margin-top:12px}.split.sm{grid-template-columns:150px 1fr}
+.donut{width:100%;max-width:230px;height:auto;display:block;margin:0 auto}
+.donut path{stroke:var(--paper);stroke-width:2;transition:filter .15s}.donut .sl{cursor:pointer;transition:opacity .2s}
+.donut .sl:hover path{filter:brightness(1.1)}.donut .sl.dim{opacity:.35}
+.donut .sl:focus{outline:none}.donut .sl:focus-visible path{stroke:var(--margin);stroke-width:4}
+.donut .pl{fill:#fff;font:600 11px Mukta,sans-serif;stroke:rgba(0,0,0,.4);stroke-width:2.5px;paint-order:stroke;pointer-events:none}
+.donut .dc{fill:var(--ink);font-family:"Tiro Devanagari Hindi",Georgia,serif}.donut .dl{fill:var(--mfg);font:500 11px Mukta,sans-serif}
+.lgi{display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px dashed var(--rule2)}.lgi .dot{width:12px;height:12px}.lgi b{margin-left:auto;font-weight:600}
+.mb.mu i{background:var(--margin);opacity:.55}.mb.md i{background:var(--ok);opacity:.55}.mb.on i{opacity:1}
+.leg{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;font-size:13px;margin:6px 0 0}.leg .sw{display:inline-block;width:12px;height:12px;margin-left:10px}.leg .sw:first-child{margin-left:0}
+.xrow{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:12px}
+.seg{display:inline-flex;border:2px solid var(--ink);border-radius:2px;margin-right:6px}.seg button{border:0;background:none;padding:5px 14px;font-weight:600}.seg button.on{background:var(--ink);color:var(--paper)}
+.btn.sm{padding:7px 16px}
+#printArea{display:none}
+@media(max-width:600px){.split{grid-template-columns:1fr}.split.sm{grid-template-columns:130px 1fr;gap:16px}}
+@media print{
+  body>*{display:none!important}body>#printArea{display:block!important;color:#000;background:#fff;font:12px/1.45 Mukta,system-ui,sans-serif}body{background:#fff!important}
+  #printArea h1{font-size:22px;margin:0 0 6px}#printArea h2{font-size:16px;margin:16px 0 0}#printArea table{width:100%;border-collapse:collapse;margin:8px 0 14px}
+  #printArea th,#printArea td{border-bottom:1px solid #bbb;padding:4px 6px;text-align:left}#printArea .r{text-align:right}
+  #printArea thead{display:table-header-group}#printArea tr{break-inside:avoid}#printArea .tot td{font-weight:700;border-top:2px solid #000}
+}

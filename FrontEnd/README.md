@@ -15,8 +15,10 @@ roz-ka-khata/
 └── js/               (loaded in this order)
     ├── data.js       Categories, money/date helpers
     ├── i18n.js       English / Hindi / Marathi translations
-    ├── state.js      Expense data + save/load (localStorage)
-    ├── render.js     Draws totals, charts, lists
+    ├── auth.js       Register / login / logout (local stand-in, swap for the Java API)
+    ├── state.js      Expense data per signed-in user + save/load (localStorage)
+    ├── render.js     Draws totals, pie (donut) chart, bars, lists
+    ├── export.js     Export to CSV, Excel (.xlsx) and PDF (print report)
     └── app.js        Form, buttons, language switch, start-up
 ```
 
@@ -24,5 +26,5 @@ roz-ka-khata/
 Home, Add, History, Categories, Compare (month-wise comparison).
 
 ## Connecting a backend later
-Replace `save()` and the load line in `js/state.js` with API calls (Java + database).
+Replace the four methods in `js/auth.js` (register, login, logout, current) and `loadExps()` / `save()` in `js/state.js` with API calls (Java + PostgreSQL). The local auth is for development only and is not secure.
 Add a language by adding a column in `js/i18n.js` and an `<option>` in `index.html`.
