@@ -1,0 +1,1 @@
+{ "name": "roz-ka-khata-frontend-tests", "private": true, "scripts": { "test": "node frontend.test.js" }, "devDependencies": { "jsdom": "^26.0.0" } }
