@@ -1,40 +1,58 @@
-# Dependencies
+# ---------- Dependencies ----------
 node_modules/
 
-# Build output
-dist/
-dist-ssr/
+# ---------- Build output ----------
+target/
+bin/
 build/
+*.class
+*.jar
+*.war
 
-# Vite cache
-.vite/
-.vite-temp/
-
-# Environment variables
+# ---------- Environment variables / secrets ----------
 .env
 .env.local
 .env.*.local
+application-local.properties
+application-local.yml
 
-# Logs
+# ---------- Logs ----------
+*.log
+logs/
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
 pnpm-debug.log*
-*.log
 
-# Editor / IDE
+# ---------- Eclipse / Spring Tool Suite ----------
+.classpath
+.project
+.settings/
+.factorypath
+.apt_generated/
+.apt_generated_tests/
+.springBeans
+.sts4-cache/
+
+# ---------- IntelliJ ----------
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# ---------- VS Code ----------
 .vscode/*
 !.vscode/extensions.json
-.idea/
+
+# ---------- Other editors ----------
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
 
-# OS files
+# ---------- OS files ----------
 .DS_Store
 Thumbs.db
 
-# Local test/coverage output
+# ---------- Test / coverage output ----------
 coverage/
