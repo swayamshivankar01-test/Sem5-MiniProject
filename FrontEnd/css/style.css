@@ -111,3 +111,10 @@ body.authing #auth{display:grid}body.authing .app,body.authing .snack{display:no
   #printArea th,#printArea td{border-bottom:1px solid #bbb;padding:4px 6px;text-align:left}#printArea .r{text-align:right}
   #printArea thead{display:table-header-group}#printArea tr{break-inside:avoid}#printArea .tot td{font-weight:700;border-top:2px solid #000}
 }
+
+/* History: custom date / range filter */
+.drow{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.drow label{display:flex;flex-direction:column;gap:3px;font-weight:600;font-size:14px}
+.drow input[type=date]{font:inherit;padding:6px 8px;border:2px solid var(--ink);border-radius:2px;background:var(--paper);color:var(--ink)}
+.dsum{margin-top:10px;padding:8px 10px;background:var(--hi);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-weight:700}
+.dsum[hidden]{display:none}

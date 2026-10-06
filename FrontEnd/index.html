@@ -57,11 +57,31 @@
 </section>
 <section class="view" id="v-history">
   <div class="ph"><h2>History</h2><p class="mut">Every expense this month, with a total for each day.</p></div>
+  <section class="blk" id="dfilter">
+    <div class="filt"><h2 id="d_h">Find by date</h2><button type="button" id="dclear" data-act="dclear" hidden>Clear dates</button></div>
+    <div class="drow">
+      <label for="dfrom"><span id="d_from">From</span><input type="date" id="dfrom"></label>
+      <label for="dto"><span id="d_to">To</span><input type="date" id="dto"></label>
+      <button type="button" class="btn sm" data-act="dtoday" id="d_today">Today</button>
+    </div>
+    <p class="mut" id="d_hint" style="margin:8px 0 0;font-size:13px">Pick one date to see that day only, or two dates for a range.</p>
+    <div id="dsum" class="dsum" role="status" hidden></div>
+  </section>
   <section class="blk" id="exp"></section>
   <section class="blk"><div id="list"></div></section>
 </section>
 <section class="view" id="v-categories">
   <div class="ph"><h2>Categories</h2><p class="mut">Select one to see only its expenses.</p></div>
+  <section class="blk" id="cdfilter">
+    <div class="filt"><h2 id="cd_h">Find by date</h2><button type="button" id="cdclear" data-act="dclear" hidden>Clear dates</button></div>
+    <div class="drow">
+      <label for="cdfrom"><span id="cd_from">From</span><input type="date" id="cdfrom"></label>
+      <label for="cdto"><span id="cd_to">To</span><input type="date" id="cdto"></label>
+      <button type="button" class="btn sm" data-act="dtoday" id="cd_today">Today</button>
+    </div>
+    <p class="mut" id="cd_hint" style="margin:8px 0 0;font-size:13px">Pick dates to see spending by category for that period.</p>
+    <div id="cdsum" class="dsum" role="status" hidden></div>
+  </section>
   <section class="blk"><div id="bycat"></div></section>
 </section>
 <section class="view" id="v-compare" style="max-width:900px">

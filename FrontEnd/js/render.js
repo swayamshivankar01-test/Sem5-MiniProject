@@ -17,10 +17,18 @@ function render(){
   ${canSave?'':'<p class="mut" style="margin:12px 0 0">'+t('blocked')+'</p>'}`;
   tick($('#summary .big span'),total);
 
+  /* Custom dates (shared by History and Categories): one date = that day, two dates = a range */
+  const ranged=!!(dFrom||dTo);let lo=dFrom||dTo,hi=dTo||dFrom;if(lo>hi)[lo,hi]=[hi,lo];
+  const fd=d=>new Date(d+'T00:00').toLocaleDateString(LOC[lang],{day:'numeric',month:'short',year:'numeric'}),rlabel=ranged?(lo===hi?fd(lo):fd(lo)+' – '+fd(hi)):'';
+  const cIn=ranged?exps.filter(e=>e.date>=lo&&e.date<=hi):inM,cTot=sum(cIn),cBy=Object.keys(CATS).map(c=>[c,sum(cIn.filter(e=>e.category===c))]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
   const by=Object.keys(CATS).map(c=>[c,sum(inM.filter(e=>e.category===c))]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
-  const bar=([c,v])=>`<button class="cat ${filter===c?'on':''}" data-act="filter" data-v="${c}" aria-pressed="${filter===c}"><i class="dot" style="background:${CATS[c][0]};width:14px;height:14px"></i><span>${tc(c)}</span><em>${fmt(v)}</em><small>${Math.round(v/total*100)}%</small></button>`;
+  const bar=([c,v])=>`<button class="cat ${filter===c?'on':''}" data-act="filter" data-v="${c}" aria-pressed="${filter===c}"><i class="dot" style="background:${CATS[c][0]};width:14px;height:14px"></i><span>${tc(c)}</span><em>${fmt(v)}</em><small>${Math.round(v/cTot*100)}%</small></button>`;
   const none='<p class="mut">'+t('nodata')+'</p>';
-  $('#bycat').innerHTML=by.length?`<div class="split">${donut(by,total)}<div>${by.map(bar).join('')}</div></div>`:none;
+  $('#bycat').innerHTML=cBy.length?`<div class="split">${donut(cBy,cTot)}<div>${cBy.map(bar).join('')}</div></div>`:ranged?`<p class="mut">${t('d_none').replace('{r}',rlabel)}</p>`:none;
+  /* Categories: date picker + summary (same dates as History) */
+  $('#cd_h').textContent=t('d_h');$('#cd_from').textContent=t('d_from');$('#cd_to').textContent=t('d_to');$('#cd_today').textContent=t('d_today');$('#cd_hint').textContent=t('d_hint_c');$('#cdclear').textContent=t('d_clear');
+  $('#cdfrom').value=dFrom;$('#cdto').value=dTo;$('#cdclear').hidden=!ranged;
+  const cs=$('#cdsum');cs.hidden=!ranged;if(ranged)cs.innerHTML=`<span>${rlabel}</span><span>${t('d_total').replace('{n}',cIn.length).replace('{a}',fmt(cTot))}</span>`;
   $('#top').innerHTML=by.length?`<div class="split sm">${donut(by,total)}<div>${by.slice(0,4).map(([c,v])=>`<div class="lgi"><i class="dot" style="background:${CATS[c][0]}"></i><span>${tc(c)}</span><b>${fmt(v)}</b></div>`).join('')}</div></div>`:none;
 
   const ks=[-5,-4,-3,-2,-1,0].map(n=>addM(month,n)),tt=ks.map(k=>sum(exps.filter(e=>e.date.startsWith(k)))),mx=Math.max(...tt,1);
@@ -34,11 +42,17 @@ function render(){
   const group=rs=>{let d='',h='';rs.forEach(e=>{if(e.date!==d){d=e.date;h+=`<div class="day"><span>${dayLabel(d)}</span><span>${fmt(sum(exps.filter(r=>r.date===d)))}</span></div>`}
     const[c,ic]=CATS[e.category];h+=`<div class="ex"><i class="dot" style="background:${c}"></i><div class="inf"><b>${esc(e.note||e.category)}</b><span class="mut">${tc(e.category)}</span></div><strong>−${fmt(e.amount)}</strong><button class="ib" data-act="edit" data-v="${e.id}" aria-label="Edit ${esc(e.note||e.category)}">✎</button><button class="ib" data-act="del" data-v="${e.id}" aria-label="Delete ${esc(e.note||e.category)}">🗑</button></div>`});return h};
   const empty=exps.length?`<div class="empty mut">${t('nothing').replace('{m}',long(month))}</div>`:`<div class="empty"><p class="mut">${t('noexp')}</p><button class="btn" data-act="sample">${t('sample')}</button></div>`;
-  const rows=all.filter(e=>!filter||e.category===filter);
+  /* Custom date filter: one date = that day, two dates = range (works across months, ignores the month picker) */
+  const byNew=(x,y)=>y.date.localeCompare(x.date)||y.id.localeCompare(x.id),everything=expScope==='all'&&!ranged;
+  const inR=ranged?exps.filter(e=>e.date>=lo&&e.date<=hi).sort(byNew):everything?exps.slice().sort(byNew):all;
+  const rows=inR.filter(e=>!filter||e.category===filter);
+  $('#d_h').textContent=t('d_h');$('#d_from').textContent=t('d_from');$('#d_to').textContent=t('d_to');$('#d_today').textContent=t('d_today');$('#d_hint').textContent=t('d_hint');$('#dclear').textContent=t('d_clear');
+  $('#dfrom').value=dFrom;$('#dto').value=dTo;$('#dclear').hidden=!ranged;
+  const ds=$('#dsum');ds.hidden=!(ranged||everything);if(ranged||everything)ds.innerHTML=`<span>${ranged?rlabel:t('sc_all')}</span><span>${t('d_total').replace('{n}',rows.length).replace('{a}',fmt(sum(rows)))}</span>`;
   $('#recent').innerHTML=all.length?group(all.slice(0,5)):empty;
-  $('#list').innerHTML=(filter?`<div class="filt"><span class="mut">${t('showing').replace('{c}',tc(filter))}</span><button data-act="filter" data-v="${filter}">${t('clear')}</button></div>`:'')+(rows.length?group(rows):filter?`<div class="empty mut">${t('nocat').replace('{c}',tc(filter)).replace('{m}',long(month))}</div>`:empty);
+  $('#list').innerHTML=(filter?`<div class="filt"><span class="mut">${t('showing').replace('{c}',tc(filter))}</span><button data-act="filter" data-v="${filter}">${t('clear')}</button></div>`:'')+(rows.length?group(rows):ranged?`<div class="empty mut">${t('d_none').replace('{r}',rlabel)}</div>`:filter?`<div class="empty mut">${(everything?t('nocat_all').replace('{c}',tc(filter)):t('nocat').replace('{c}',tc(filter)).replace('{m}',long(month)))}</div>`:empty);
   $('#exp').innerHTML=`<h2>${t('exp_h')}</h2><p class="mut" style="margin:6px 0 0">${t('exp_p')}</p>
-  <div class="xrow"><div class="seg" role="group">${['month','all'].map(k=>`<button class="${expScope===k?'on':''}" data-act="scope" data-v="${k}" aria-pressed="${expScope===k}">${t('sc_'+k)}</button>`).join('')}</div>
+  <div class="xrow"><div class="seg" role="group">${['month','all'].map(k=>`<button class="${expScope===k&&!ranged?'on':''}" data-act="scope" data-v="${k}" aria-pressed="${expScope===k&&!ranged}">${t('sc_'+k)}</button>`).join('')}</div>
   <button class="btn sm" data-act="export" data-v="csv">CSV</button><button class="btn sm" data-act="export" data-v="xlsx">Excel</button><button class="btn sm" data-act="export" data-v="pdf">PDF</button></div>
-  <p class="mut" style="margin:8px 0 0;font-size:13px">${t('x_pdfhint')}</p><div class="err" id="xerr" role="alert"></div>`;
+  ${ranged?`<p style="margin:8px 0 0;font-weight:700">${t('x_range').replace('{r}',rlabel)}</p>`:''}<p class="mut" style="margin:8px 0 0;font-size:13px">${t('x_pdfhint')}</p><div class="err" id="xerr" role="alert"></div>`;
 }

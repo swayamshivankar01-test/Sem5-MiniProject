@@ -1,7 +1,11 @@
 /* Export: CSV, Excel (.xlsx, built in the browser, no library) and PDF (print report -> "Save as PDF"). */
 const fmt2=n=>'₹'+n.toLocaleString('en-IN',{maximumFractionDigits:2});
-function exportRows(){return(expScope==='all'?exps:exps.filter(e=>e.date.startsWith(month))).slice().sort((a,b)=>a.date.localeCompare(b.date)||a.id.localeCompare(b.id))}
-const periodLabel=()=>expScope==='all'?t('sc_all'):long(month),fileBase=()=>'roz-ka-khata-'+(expScope==='all'?'all':month);
+/* Custom dates from the History screen (dFrom / dTo): one date = that day, two = a range. They win over This month / All entries. */
+function dateRange(){if(!(dFrom||dTo))return null;let lo=dFrom||dTo,hi=dTo||dFrom;if(lo>hi)[lo,hi]=[hi,lo];return[lo,hi]}
+function exportRows(){const r=dateRange(),src=r?exps.filter(e=>e.date>=r[0]&&e.date<=r[1]):expScope==='all'?exps:exps.filter(e=>e.date.startsWith(month));return src.slice().sort((a,b)=>a.date.localeCompare(b.date)||a.id.localeCompare(b.id))}
+const fdate=d=>new Date(d+'T00:00').toLocaleDateString(LOC[lang],{day:'numeric',month:'short',year:'numeric'});
+const periodLabel=()=>{const r=dateRange();return r?(r[0]===r[1]?fdate(r[0]):fdate(r[0])+' – '+fdate(r[1])):expScope==='all'?t('sc_all'):long(month)};
+const fileBase=()=>{const r=dateRange();return'roz-ka-khata-'+(r?(r[0]===r[1]?r[0]:r[0]+'_to_'+r[1]):expScope==='all'?'all':month)};
 const clean=s=>String(s||'').replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g,'');
 function download(name,blob){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 const heads=()=>[t('x_date'),t('x_cat'),t('x_note'),t('x_amt')];

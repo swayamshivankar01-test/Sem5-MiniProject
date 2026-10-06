@@ -1,6 +1,8 @@
 /* Categories, constants and small helpers (money format, dates, escaping). */
 const CATS={Food:['#F97316','🍽️'],Transport:['#2563EB','🚌'],Bills:['#7C3AED','💡'],Shopping:['#EC4899','🛍️'],Health:['#EF4444','💊'],Entertainment:['#F59E0B','🎬'],Other:['#64748B','📦']};
-const KEY='rozkakhata:v1',$=s=>document.querySelector(s);
+/* Backend address. Change this one line when you deploy (e.g. 'https://api.yourdomain.com/api'). */
+const API_BASE_URL='http://localhost:8080/api';
+const $=s=>document.querySelector(s);
 const pad=n=>String(n).padStart(2,'0'),iso=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
 const today=iso(new Date()),fmt=n=>'₹'+Math.round(n).toLocaleString('en-IN');
 const sum=a=>a.reduce((s,e)=>s+e.amount,0);

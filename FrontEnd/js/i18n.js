@@ -49,6 +49,17 @@ sample|Fill with sample data|नमूना डेटा भरें|नमु
 showing|Showing {c} only|केवल {c} दिखा रहे हैं|फक्त {c} दाखवत आहे
 clear|Clear filter|फ़िल्टर हटाएँ|फिल्टर काढा
 nocat|No {c} expenses in {m}.|{m} में {c} का कोई खर्च नहीं।|{m} मध्ये {c} चा खर्च नाही.
+d_h|Find by date|तारीख से खोजें|तारखेनुसार शोधा
+d_from|From|से|पासून
+d_to|To|तक|पर्यंत
+d_today|Today|आज|आज
+d_clear|Clear dates|तारीखें हटाएँ|तारखा काढा
+d_hint|Pick one date to see that day only, or two dates for a range.|केवल उस दिन का खर्च देखने के लिए एक तारीख चुनें, या अवधि के लिए दो तारीखें।|फक्त त्या दिवसाचा खर्च पाहण्यासाठी एक तारीख निवडा, किंवा कालावधीसाठी दोन तारखा.
+d_total|{n} entries · Total {a}|{n} खर्च · कुल {a}|{n} खर्च · एकूण {a}
+d_none|No expenses on {r}.|{r} को कोई खर्च नहीं।|{r} रोजी काही खर्च नाही.
+nocat_all|No {c} expenses yet.|{c} का कोई खर्च नहीं।|{c} चा खर्च नाही.
+x_range|Exporting the dates you selected: {r}|चुनी हुई तारीखें एक्सपोर्ट होंगी: {r}|निवडलेल्या तारखा एक्सपोर्ट होतील: {r}
+d_hint_c|Pick dates to see spending by category for that period.|उस अवधि में श्रेणी के अनुसार खर्च देखने के लिए तारीखें चुनें।|त्या कालावधीतील श्रेणीनुसार खर्च पाहण्यासाठी तारखा निवडा.
 nodata|Add an expense to see where your money goes.|पैसा कहाँ जाता है यह देखने के लिए खर्च जोड़ें।|पैसे कुठे जातात ते पाहण्यासाठी खर्च जोडा.
 deleted|Expense deleted.|खर्च हटाया गया।|खर्च हटवला.
 undo|Undo|वापस लें|पूर्ववत करा
@@ -77,6 +88,13 @@ e_pwmatch|The two passwords do not match.|दोनों पासवर्ड 
 e_exists|An account with this email already exists. Sign in instead.|इस ईमेल से अकाउंट पहले से है। साइन इन करें।|या ईमेलचे अकाउंट आधीपासून आहे. साइन इन करा.
 e_bad|Email or password is incorrect.|ईमेल या पासवर्ड ग़लत है।|ईमेल किंवा पासवर्ड चुकीचा आहे.
 e_store|This browser is blocking saving, so the account could not be created.|यह ब्राउज़र सहेजने से रोक रहा है, इसलिए अकाउंट नहीं बन सका।|हा ब्राउझर साठवणे रोखत आहे, त्यामुळे अकाउंट तयार झाले नाही.
+e_net|Cannot reach the server. Check your connection and try again.|सर्वर से संपर्क नहीं हो पा रहा। कनेक्शन जाँचें और फिर कोशिश करें।|सर्व्हरशी संपर्क होत नाही. कनेक्शन तपासा आणि पुन्हा प्रयत्न करा.
+e_server|Something went wrong on the server. Please try again.|सर्वर पर कुछ गड़बड़ हो गई। कृपया फिर कोशिश करें।|सर्व्हरवर काहीतरी चूक झाली. कृपया पुन्हा प्रयत्न करा.
+e_session|Your session has expired. Please sign in again.|आपका सत्र समाप्त हो गया है। कृपया फिर से साइन इन करें।|तुमचे सत्र संपले आहे. कृपया पुन्हा साइन इन करा.
+e_load|Unable to load expenses.|खर्च लोड नहीं हो सके।|खर्च लोड करता आले नाहीत.
+e_save|Unable to save expense.|खर्च सहेजा नहीं जा सका।|खर्च जतन करता आला नाही.
+e_upd|Unable to update expense.|खर्च अपडेट नहीं हो सका।|खर्च अपडेट करता आला नाही.
+e_del|Unable to delete expense.|खर्च हटाया नहीं जा सका।|खर्च हटवता आला नाही.
 exp_h|Export|निर्यात|निर्यात
 exp_p|Download your entries as a file, or print a report.|अपनी प्रविष्टियाँ फ़ाइल में डाउनलोड करें या रिपोर्ट प्रिंट करें।|तुमच्या नोंदी फाइलमध्ये डाउनलोड करा किंवा अहवाल प्रिंट करा.
 sc_month|This month|इस महीने|या महिन्याचे

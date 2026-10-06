@@ -1,45 +1,50 @@
-/* Auth service: register, login, logout, current user.
-   TODAY: a local stand-in (accounts kept in localStorage) so the screens work without a server.
-   LATER: replace the four methods with fetch() calls to the Java backend and keep the same inputs/outputs:
-     register({name,email,password}) -> POST /api/auth/register   -> user
-     login({email,password})         -> POST /api/auth/login      -> user (+ token)
-     logout()                        -> clear token
-     current()                       -> user from the stored token, or null
-   Errors are thrown as Error with .code = 'exists' | 'bad' | 'store'. */
+/* Auth service: register, login, logout, current user. Talks to the Spring Boot backend.
+     register({name,email,password}) -> POST /api/auth/register, then logs in -> user
+     login({email,password})         -> POST /api/auth/login   -> stores the JWT -> user
+     logout()                        -> clears the stored JWT and user
+     current()                       -> user from the stored (non-expired) JWT, or null
+   The JWT and the public user info are kept in localStorage. The password is never stored.
+   Errors are thrown as Error with .code = 'exists' | 'bad' | 'net' | 'server' | 'store'. */
 const Auth=(()=>{
-  const UK='rozkakhata:users',SK='rozkakhata:session';
-  const read=k=>{try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}};
-  const write=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
-  const rnd=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,10);
-  const hex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
-  const pub=u=>({id:u.id,name:u.name,email:u.email});
+  const TK='rozkakhata:token',UK='rozkakhata:user';
   const fail=code=>{const e=new Error(code);e.code=code;return e};
-  async function hash(pw,salt){
-    if(!(window.crypto&&crypto.subtle))return 'x'+btoa(unescape(encodeURIComponent(salt+pw)));
-    const enc=new TextEncoder(),k=await crypto.subtle.importKey('raw',enc.encode(pw),'PBKDF2',false,['deriveBits']);
-    return hex(await crypto.subtle.deriveBits({name:'PBKDF2',salt:enc.encode(salt),iterations:100000,hash:'SHA-256'},k,256));
+  const get=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+  const clear=()=>{try{localStorage.removeItem(TK);localStorage.removeItem(UK)}catch(e){}};
+  const pub=u=>({id:u.id,name:u.name,email:u.email});
+  /* expiry time (ms) read from the JWT payload; 0 if the token cannot be read */
+  const expiry=tk=>{try{return JSON.parse(atob(tk.split('.')[1].replace(/-/g,'+').replace(/_/g,'/'))).exp*1000||0}catch(e){return 0}};
+  /* the old local-only accounts (password hashes) are not used any more, so remove them */
+  try{localStorage.removeItem('rozkakhata:users');localStorage.removeItem('rozkakhata:session')}catch(e){}
+
+  async function post(path,body){
+    let res;
+    try{res=await fetch(`${API_BASE_URL}${path}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})}
+    catch(e){throw fail('net')}
+    let data=null;try{data=await res.json()}catch(e){}
+    return{res,data};
   }
   return{
-    current(){const id=read(SK),u=id&&(read(UK)||[]).find(x=>x.id===id);return u?pub(u):null},
+    /* the JWT if there is a valid, non-expired one, else null (also clears a dead session) */
+    token(){const tk=get(TK);if(!tk)return null;if(expiry(tk)<=Date.now()){clear();return null}return tk},
+    current(){
+      if(!this.token())return null;
+      try{const u=JSON.parse(get(UK)||'null');if(u&&u.name)return pub(u)}catch(e){}
+      clear();return null;
+    },
     async register({name,email,password}){
-      email=email.trim().toLowerCase();const users=read(UK)||[];
-      if(users.some(u=>u.email===email))throw fail('exists');
-      const salt=rnd(),u={id:'u'+rnd(),name:name.trim(),email,salt,hash:await hash(password,salt)};
-      try{
-        /* first account adopts entries saved before accounts existed */
-        const old=!users.length&&localStorage.getItem(KEY);
-        if(old){localStorage.setItem(KEY+':'+u.id,old);localStorage.removeItem(KEY)}
-        users.push(u);write(UK,users);write(SK,u.id);
-      }catch(e){throw fail('store')}
-      return pub(u);
+      email=email.trim().toLowerCase();
+      const{res}=await post('/auth/register',{name:name.trim(),email,password});
+      if(res.status===409)throw fail('exists');
+      if(!res.ok)throw fail('server');
+      return this.login({email,password});   /* register returns no token, so sign in right after */
     },
     async login({email,password}){
-      email=email.trim().toLowerCase();
-      const u=(read(UK)||[]).find(x=>x.email===email);
-      if(!u||await hash(password,u.salt)!==u.hash)throw fail('bad');
-      try{write(SK,u.id)}catch(e){throw fail('store')}
-      return pub(u);
+      const{res,data}=await post('/auth/login',{email:email.trim().toLowerCase(),password});
+      if(res.status===400||res.status===401)throw fail('bad');
+      if(!res.ok||!data||!data.token||!data.user)throw fail('server');
+      try{localStorage.setItem(TK,data.token);localStorage.setItem(UK,JSON.stringify(pub(data.user)))}catch(e){throw fail('store')}
+      return pub(data.user);
     },
-    logout(){try{localStorage.removeItem(SK)}catch(e){}}
+    logout(){clear()}
   };
 })();
